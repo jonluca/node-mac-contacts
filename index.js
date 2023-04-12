@@ -1,19 +1,5 @@
 const contacts = require('bindings')('contacts.node')
 
-const { EventEmitter } = require('events')
-
-const listener = new EventEmitter()
-
-listener.setup = () => {
-  contacts.setupListener(listener.emit.bind(listener))
-}
-
-listener.remove = () => {
-  contacts.removeListener()
-}
-
-listener.isListening = () => contacts.isListening()
-
 const optionalProperties = [
   'jobTitle',
   'departmentName',
@@ -130,7 +116,6 @@ function deleteContact(contact) {
 }
 
 module.exports = {
-  listener,
   requestAccess: contacts.requestAccess,
   getAuthStatus: contacts.getAuthStatus,
   getAllContacts,

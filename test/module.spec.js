@@ -12,7 +12,6 @@ const {
 
 const isCI = require('is-ci')
 const ifit = (condition) => (condition ? it : it.skip)
-const ifdescribe = (condition) => (condition ? describe : describe.skip)
 
 if (!isCI) {
   requestAccess().then((status) => {
@@ -218,44 +217,6 @@ describe('node-mac-contacts', () => {
       expect(() => {
         updateContact({ emailAddresses: 1 })
       }).to.throw(/emailAddresses must be an array/)
-    })
-  })
-
-  ifdescribe(!isCI)('listener', () => {
-    afterEach(() => {
-      if (listener.isListening()) {
-        listener.remove()
-      }
-    })
-
-    it('throws when trying to remove a nonexistent listener', () => {
-      expect(() => {
-        listener.remove()
-      }).to.throw(/No observers are currently observing/)
-    })
-
-    it('throws when trying to setup an already-existent listener', () => {
-      expect(() => {
-        listener.setup()
-        listener.setup()
-      }).to.throw(/An observer is already observing/)
-    })
-
-    it('emits an event when the contact is changed', (done) => {
-      listener.setup()
-
-      addNewContact({
-        firstName: 'William',
-        lastName: 'Grapeseed',
-        nickname: 'Billy',
-        birthday: '1990-09-09',
-        phoneNumbers: ['+1234567890'],
-        emailAddresses: ['billy@grapeseed.com'],
-      })
-
-      listener.once('contact-changed', () => {
-        done()
-      })
     })
   })
 })

@@ -2,11 +2,6 @@
 #import <Contacts/Contacts.h>
 #include <napi.h>
 
-Napi::ThreadSafeFunction ts_fn;
-id observer = nil;
-
-Napi::Reference<Napi::Array> contacts_ref;
-
 /***** HELPERS *****/
 
 // Dummy value to pass into function parameter for ThreadSafeFunction.
@@ -495,9 +490,6 @@ Napi::Array GetAllContacts(const Napi::CallbackInfo &info) {
   if (AuthStatus() != CNAuthorizationStatusAuthorized)
     return Napi::Array::New(env);
 
-  if (!contacts_ref.IsEmpty())
-    return contacts_ref.Value();
-
   CNContactStore *addressBook = [[CNContactStore alloc] init];
   Napi::Array extra_keys = info[0].As<Napi::Array>();
 
@@ -540,8 +532,6 @@ Napi::Array GetAllContacts(const Napi::CallbackInfo &info) {
     CNContact *cncontact = [cncontacts objectAtIndex:i];
     contacts[i] = CreateContact(env, cncontact);
   }
-
-  contacts_ref = Napi::Persistent(contacts);
 
   return contacts;
 }
@@ -642,75 +632,8 @@ Napi::Boolean UpdateContact(const Napi::CallbackInfo &info) {
   return Napi::Boolean::New(env, success);
 }
 
-// Sets up event listening for changes to the CNContactStore.
-Napi::Boolean SetupListener(const Napi::CallbackInfo &info) {
-  Napi::Env env = info.Env();
-
-  if (observer != nil) {
-    Napi::Error::New(env, "An observer is already observing")
-        .ThrowAsJavaScriptException();
-    return Napi::Boolean::New(env, false);
-  }
-
-  ts_fn = Napi::ThreadSafeFunction::New(env, info[0].As<Napi::Function>(),
-                                        "emitCallback", 0, 1);
-
-  observer = [[NSNotificationCenter defaultCenter]
-      addObserverForName:CNContactStoreDidChangeNotification
-                  object:nil
-                   queue:[NSOperationQueue mainQueue]
-              usingBlock:^(NSNotification *note) {
-                contacts_ref.Reset();
-                auto callback = [](Napi::Env env, Napi::Function js_cb,
-                                   const char *value) {
-                  js_cb.Call({Napi::String::New(env, value)});
-                };
-                ts_fn.BlockingCall("contact-changed", callback);
-              }];
-
-  return Napi::Boolean::New(env, true);
-}
-
-// Removes event listening for changes to the CNContactStore.
-Napi::Boolean RemoveListener(const Napi::CallbackInfo &info) {
-  Napi::Env env = info.Env();
-
-  if (observer == nil) {
-    Napi::Error::New(env, "No observers are currently observing")
-        .ThrowAsJavaScriptException();
-    return Napi::Boolean::New(env, false);
-  }
-
-  // Release thread-safe function.
-  ts_fn.Release();
-
-  // Remove observer from the Notification Center.
-  [[NSNotificationCenter defaultCenter] removeObserver:observer];
-
-  // Reset observer to nil.
-  observer = nil;
-
-  return Napi::Boolean::New(env, true);
-}
-
-// Indicates whether event listening for changes to the CNContactStore is in
-// place.
-Napi::Boolean IsListening(const Napi::CallbackInfo &info) {
-  Napi::Env env = info.Env();
-
-  bool is_listening = observer != nullptr;
-
-  return Napi::Boolean::New(env, is_listening);
-}
-
 // Initializes all functions exposed to JS.
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
-  exports.Set(Napi::String::New(env, "setupListener"),
-              Napi::Function::New(env, SetupListener));
-  exports.Set(Napi::String::New(env, "removeListener"),
-              Napi::Function::New(env, RemoveListener));
-  exports.Set(Napi::String::New(env, "isListening"),
-              Napi::Function::New(env, IsListening));
   exports.Set(Napi::String::New(env, "requestAccess"),
               Napi::Function::New(env, RequestAccess));
   exports.Set(Napi::String::New(env, "getAuthStatus"),

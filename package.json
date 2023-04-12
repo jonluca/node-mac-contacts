@@ -1,6 +1,6 @@
 {
-  "name": "node-mac-contacts",
-  "version": "1.6.1",
+  "name": "electron-mac-contacts",
+  "version": "0.0.0-development",
   "description": "A native module that allows you to access and manipulate macOS contacts",
   "main": "index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/codebytere/node-mac-contacts.git"
+    "url": "git+https://github.com/jonluca/node-mac-contacts.git"
   },
   "keywords": [
     "contacts",
@@ -28,22 +28,22 @@
   "author": "Shelley Vohr <shelley.vohr@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/codebytere/node-mac-contacts/issues"
+    "url": "https://github.com/jonluca/node-mac-contacts/issues"
   },
-  "homepage": "https://github.com/codebytere/node-mac-contacts#readme",
+  "homepage": "https://github.com/jonluca/node-mac-contacts#readme",
   "devDependencies": {
-    "chai": "^4.3.6",
+    "chai": "^4.3.7",
     "clang-format": "^1.8.0",
-    "husky": "^8.0.1",
-    "is-ci": "^2.0.0",
-    "lint-staged": "^12.4.1",
-    "mocha": "^10.0.0",
-    "node-gyp": "^9.0.0",
-    "prettier": "^2.6.2"
+    "husky": "^8.0.3",
+    "is-ci": "^3.0.1",
+    "lint-staged": "^13.2.1",
+    "mocha": "^10.2.0",
+    "node-gyp": "^9.3.1",
+    "prettier": "^2.8.7"
   },
   "dependencies": {
     "bindings": "^1.5.0",
-    "node-addon-api": "^3.0.2"
+    "node-addon-api": "^6.0.0"
   },
   "lint-staged": {
     "*.js": [
