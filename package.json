@@ -3,6 +3,7 @@
   "version": "0.0.0-development",
   "description": "A native module that allows you to access and manipulate macOS contacts",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "build": "node-gyp build",
     "build:dev": "node-gyp build --debug",
@@ -32,6 +33,7 @@
   },
   "homepage": "https://github.com/jonluca/node-mac-contacts#readme",
   "devDependencies": {
+    "@types/node": "^18.15.11",
     "chai": "^4.3.7",
     "clang-format": "^1.8.0",
     "husky": "^8.0.3",
