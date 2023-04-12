@@ -1,6 +1,6 @@
 const contacts = require('bindings')('contacts.node')
 
-const optionalProperties = [
+const OPTIONAL_PROPERTIES = [
   'jobTitle',
   'departmentName',
   'organizationName',
@@ -17,9 +17,9 @@ function getAllContacts(extraProperties = []) {
     throw new TypeError('extraProperties must be an array')
   }
 
-  if (!extraProperties.every((p) => optionalProperties.includes(p))) {
+  if (!extraProperties.every((p) => OPTIONAL_PROPERTIES.includes(p))) {
     throw new TypeError(
-      `properties in extraProperties must be one of ${optionalProperties.join(
+      `properties in extraProperties must be one of ${OPTIONAL_PROPERTIES.join(
         ', ',
       )}`,
     )
@@ -37,9 +37,9 @@ function getContactsByName(name, extraProperties = []) {
     throw new TypeError('extraProperties must be an array')
   }
 
-  if (!extraProperties.every((p) => optionalProperties.includes(p))) {
+  if (!extraProperties.every((p) => OPTIONAL_PROPERTIES.includes(p))) {
     throw new TypeError(
-      `properties in extraProperties must be one of ${optionalProperties.join(
+      `properties in extraProperties must be one of ${OPTIONAL_PROPERTIES.join(
         ', ',
       )}`,
     )
