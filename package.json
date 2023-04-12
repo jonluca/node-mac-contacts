@@ -4,6 +4,13 @@
   "description": "A native module that allows you to access and manipulate macOS contacts",
   "main": "index.js",
   "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "contacts.mm",
+    "binding.gyp",
+    "package.json"
+  ],
   "scripts": {
     "build": "node-gyp build",
     "build:dev": "node-gyp build --debug",
