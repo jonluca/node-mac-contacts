@@ -13,10 +13,13 @@ jobs:
     runs-on: macOS-latest
     steps:
     - uses: actions/checkout@master
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: current
+        node-version: "26.12.1"
     - name: Lint
       run: |
         npm install

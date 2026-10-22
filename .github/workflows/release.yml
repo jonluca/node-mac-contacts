@@ -11,9 +11,12 @@ jobs:
     runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: "26.12.1"
       - run: yarn install --frozen-lockfile
       - run: yarn build
       - run: yarn test
